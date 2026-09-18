@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>ПЕРЕРАБОТЧИК — смена №13</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <div id="stage"><canvas id="view"></canvas></div>
+
+    <div id="menu" class="ov">
+        <div class="memo">
+            <div class="form">ФОРМА 27-Б / ОТК</div>
+            <div class="stamp">УТВЕРЖДЕНО</div>
+            <h1 class="logo">ПЕРЕРАБОТЧИК</h1>
+            <div class="sub">КОРПОРАЦИЯ «ВЕЧНАЯ СМЕНА» · ЭТАЖ Б-13 · СМЕНА №13</div>
+            <div class="doc">СЛУЖЕБНАЯ ЗАПИСКА №0-113/ДОП
+                Кому: сотруднику 04-117
+                Тема: внеплановая утилизация
+
+                Сотрудник 04-117, Ваш предшественник не прошёл аттестацию
+                и был ПЕРЕРАБОТАН. Персонал этажа Б-13 признан неэффективным
+                и подлежит утилизации. Вам выдан канцелярский инвентарь
+                для восстановления производственной дисциплины.
+
+                ВНИМАНИЕ: обнаружены аномалии — охранные дроны, токсичные
+                разливы, электрические ловушки, нестабильные конструкции.
+                Генеральный Директор ожидает Вас в Перерабатывающем цехе.
+                Отказ невозможен. Смена бессрочна.</div>
+            <div class="cols">
+                <div><b>WASD</b> — движение · <b>SHIFT</b> — спринт<br>
+                    <b>МЫШЬ</b> — обзор · <b>ЛКМ</b> — огонь · <b>ПКМ</b> — пинок<br>
+                    <b>SPACE</b> — прыжок · <b>R</b> — перезарядка<br>
+                    <b>Q</b> — быстрое переключение · <b>C</b> — рывок
+                </div>
+                <div><b>E</b> — взаимодействие · <b>1–5</b> / колесо — оружие<br>
+                    <b>TAB</b> — план этажа · <b>ESC</b> — пауза<br>
+                    <b>F</b> — фонарик
+                </div>
+            </div>
+            <div class="setblock">
+                <div class="sethead">НАСТРОЙКИ ТЕРМИНАЛА</div>
+                <div class="setrow"><label for="m_sens">ЧУВСТВИТЕЛЬНОСТЬ МЫШИ</label>
+                    <input type="range" id="m_sens" min="0.3" max="2.5" step="0.05"><output id="m_sensv">1.00</output>
+                </div>
+                <div class="setrow"><label>РАЗРЕШЕНИЕ РЕНДЕРА</label>
+                    <button class="setbtn" id="m_res" type="button">320×200</button><span></span>
+                </div>
+                <div class="setrow"><label for="m_bright">ЯРКОСТЬ</label>
+                    <input type="range" id="m_bright" min="0.6" max="1.6" step="0.05"><output
+                        id="m_brightv">1.00</output>
+                </div>
+                <div class="setrow"><label for="m_grain">ЭФФЕКТ ШУМА</label>
+                    <input type="range" id="m_grain" min="0" max="2" step="0.1"><output id="m_grainv">1.0</output>
+                </div>
+            </div>
+            <button id="startBtn" class="btn">▶ НАЧАТЬ СМЕНУ</button>
+            <div class="hint">КЛИК ЗАХВАТИТ КУРСОР · ЗВУК ВКЛЮЧАЕТСЯ АВТОМАТИЧЕСКИ · ЛУЧШЕ В CHROME/FIREFOX</div>
+        </div>
+    </div>
+
+    <div id="pause" class="ov hidden">
+        <div class="memo" style="text-align:center">
+            <h2 class="end" style="color:var(--amb)">СМЕНА ПРИОСТАНОВЛЕНА</h2>
+            <div class="doc" style="text-align:left">Перерыв не предусмотрен графиком.
+                Возвращайтесь к исполнению обязанностей.
+
+                НАПОМИНАНИЕ: серия устранений сбрасывается при бездействии > 4с.
+                Попадания оставляют кровь на стенах и полу.</div>
+            <div class="setblock">
+                <div class="sethead">НАСТРОЙКИ ТЕРМИНАЛА</div>
+                <div class="setrow"><label for="p_sens">ЧУВСТВИТЕЛЬНОСТЬ МЫШИ</label>
+                    <input type="range" id="p_sens" min="0.3" max="2.5" step="0.05"><output id="p_sensv">1.00</output>
+                </div>
+                <div class="setrow"><label>РАЗРЕШЕНИЕ РЕНДЕРА</label>
+                    <button class="setbtn" id="p_res" type="button">320×200</button><span></span>
+                </div>
+                <div class="setrow"><label for="p_bright">ЯРКОСТЬ</label>
+                    <input type="range" id="p_bright" min="0.6" max="1.6" step="0.05"><output
+                        id="p_brightv">1.00</output>
+                </div>
+                <div class="setrow"><label for="p_grain">ЭФФЕКТ ШУМА</label>
+                    <input type="range" id="p_grain" min="0" max="2" step="0.1"><output id="p_grainv">1.0</output>
+                </div>
+            </div>
+            <button id="resumeBtn" class="btn">ПРОДОЛЖИТЬ</button>
+        </div>
+    </div>
+
+    <div id="dead" class="ov hidden">
+        <div class="memo">
+            <div class="stamp">СПИСАН</div>
+            <h2 class="end">КОНТРАКТ РАСТОРГНУТ</h2>
+            <div class="sub">ПРИЧИНА: НЕЭФФЕКТИВНОСТЬ БИО-РЕСУРСА</div>
+            <div class="rating" id="deadRating"></div>
+            <div class="stats" id="deadStats"></div>
+            <button id="retryBtn" class="btn">ПОВТОРИТЬ СМЕНУ</button>
+        </div>
+    </div>
+
+    <div id="win" class="ov hidden">
+        <div class="memo">
+            <div class="stamp" style="border-color:var(--grn);color:var(--grn)">ПЕРЕВЫПОЛНЕНО</div>
+            <h2 class="end win">СМЕНА ОКОНЧЕНА</h2>
+            <div class="sub">ГЕНЕРАЛЬНЫЙ ДИРЕКТОР ПЕРЕРАБОТАН · ПЛАН ВЫПОЛНЕН НА 146%</div>
+            <div class="rating" id="winRating"></div>
+            <div class="stats" id="winStats"></div>
+            <button id="againBtn" class="btn">НОВАЯ СМЕНА</button>
+        </div>
+    </div>
+
+    <div id="term" class="ov hidden">
+        <div class="memo">
+            <div class="form">ТЕРМИНАЛ «КЛЕЙМО-ДОС»</div>
+            <div class="sub" id="termTitle">АРХИВ</div>
+            <div class="doc" id="termText"></div>
+            <button id="termClose" class="btn">[E] ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
